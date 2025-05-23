@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat App - Login</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.glitch.global/cf4204de-cf5a-4f9d-916a-743f08bf5350/icons%2Fapple-touch-icon.png?v=1747100349234">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.glitch.global/cf4204de-cf5a-4f9d-916a-743f08bf5350/icons%2Ffavicon-32x32.png?v=1747100349542">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.glitch.global/cf4204de-cf5a-4f9d-916a-743f08bf5350/icons%2Ffavicon-16x16.png?v=1747100349377">
+    <link rel="manifest" href="manifest.json">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="blur" id="blur"></div>
+    
+    <div id="auth" class="auth-container">
+        <img src="https://cdn.glitch.global/cf4204de-cf5a-4f9d-916a-743f08bf5350/logo.png?v=1746569294563" alt="Logo">
+        <h1>Chat App</h1>
+        <h2>Enter your code to continue</h2>
+        <input id="code" autocomplete="off" type="password">
+        <button onclick="authenticate()" class="auth-button">Enter</button>
+    </div>
+
+
+    <div class="header">
+        <img src="https://cdn.glitch.global/cf4204de-cf5a-4f9d-916a-743f08bf5350/logo.png?v=1746569294563" alt="Logo" class="logo">
+        <h1>Chat App</h1>
+        <img class="yh-logo" src="https://yhstudios.github.io/image1.png">
+        <span class="header-profile">&#xe853;</span>
+        <p id="profile-name">???</p>
+        <span class="settings-dropdown" id="settings-dropdown">&#xe8b8;</span>
+
+        <div class="settings">
+            <p>BE PATIENT OK</p>
+        </div>
+    </div>
+
+    <div class="messages">
+        <span class="messages-icon">&#xe0bf;</span>
+        <h1>Messages</h1>
+        <div class="messages-list">
+            <div class="message-item">
+                <div class="message-header" id="group-chat">
+                    <span class="message-sender">Group Chat</span>
+                    <span class="message-time">• 12:00 PM</span>
+                </div>
+                <div class="message-preview">Hello, how are you?</div>
+            </div> 
+
+            <div class="message-item">
+                <div class="message-header" id="daniel-hoffer">
+                    <span class="message-sender">Daniel Hoffer</span>
+                    <span class="message-time">• 12:00 PM</span>
+                </div>
+                <div class="message-preview">Hello, how are you?</div>
+            </div>
+
+            <div class="message-item">
+                <div class="message-header">
+                    <span class="message-sender" id="family-chat">Family Chat</span>
+                    <span class="message-time">• 12:00 PM</span>
+                </div>
+                <div class="message-preview">Hello, how are you?</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="texts" id="texts">
+        <div class="contact-header">
+            <span class="contact-icon">&#xe7fd;</span>
+            <h3 class="contact-name">Group Chat</h3>
+        </div>
+        <div class="bubbles" id="bubbles">
+        </div>
+        <div class="send-menu">
+            <input class="send-box" type="text" id="text" autocomplete="off" placeholder="Type a message...">
+            <span class="send-button" onclick="sendMessage()">&#xe163;</span>
+        </div>
+    </div>
+
+    <div class="contact-info">
+        <span class="contact-logo">&#xe7ef;</span>
+        <h1>Contact Info</h1>
+        <div class="contact-variables" style="display: none;">
+            <h2>Name</h2>
+            <h3>Email:</h3>
+            <p><a href="mailto:mendelhoffer45@gmail.com">example@gmail.com</a></p>
+            <h3>Phone:</h3>
+            <p>+1 555-555-5555</p>
+        </div>
+        <h2 style="text-align: center !important; color: #3fb4f8; font-family: Arial, sans-serif;">Coming Soon</h2>
+    </div>
+
+    <div id="error-banner">
+        <p id="error-text">⚠️ Something went wrong. Please try again. </p>
+        <div class="span-container">
+            <span onclick="location.reload()">Reload</span> 
+            <span onclick="this.parentElement.parentElement.style.display='none'">Dismiss</span>
+        </div>
+    </div>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io(); //when uploading to glitch, make sure to change this to https://chatapplive.glitch.me
+
+        let users = {
+            'Yehuda': {color: '#3fb4f8' },
+            'Daniel': { color: '#34C759' }, 
+            'Yosef': { color: '#ca1f08' },
+            'Levy': { color: '#5856D6' },
+        };
+
+        document.getElementById('code').focus();
+
+        function authenticate() {
+            const code = document.getElementById('code').value;
+            socket.emit('authenticate', code);
+        }
+        
+        function yehudasMessages() {
+            const group = document.getElementById('group-chat')
+            const family = document.getElementById('family-chat')
+            const texts = document.getElementById('texts')
+            const bubbles = document.getElementById("bubbles")
+            
+            family.addEventListener('click', function() {
+                
+                console.log("appened")
+                const familyChat = document.createElement('div');
+                familyChat.className = 'bubbles'
+                familyChat.innerHTML = `
+                    <iframe style="height: 100%; width: 100%" src="https://familychatapp.glitch.me">
+                `;
+                familyChat.style.height = "100%"
+                bubbles.style.display = "none"
+                texts.appendChild(familyChat);
+            });
+        }
+
+        socket.on('authSuccess', (user) => {
+            // Change the title dynamically after authentication
+            document.title = `Chat App - ${user}`;
+
+            // Hide the auth section and show the chat section
+            document.getElementById('auth').style.display = 'none';
+
+            document.getElementById('blur').style.display = 'none';
+
+            document.getElementById('profile-name').innerText = user;
+
+            if (Notification.permission !== "granted") {
+                Notification.requestPermission();
+            }
+
+            if (user === 'Yehuda') {
+                yehudasMessages();
+            }
+
+        });
+
+        socket.on('authError', (msg) => {
+            alert(msg);
+        });
+
+        socket.on('chatHistory', (msgs) => {
+            for (const m of msgs) {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'message-item'; // Add a class for styling
+                if (m.user === document.title.split(" - ")[1]) {
+                    msgDiv.classList.add('me');
+                } else {
+                    msgDiv.classList.add('other');
+                }
+                const bubbleWrapper = document.createElement('div');
+                bubbleWrapper.className = 'bubble-wrapper';
+
+                const bubble = document.createElement('div');
+                bubble.className = m.user === document.title.split(" - ")[1] ? 'bubble me' : 'bubble other';
+                bubble.innerText = m.text;
+
+                const timestamp = document.createElement('span');
+                timestamp.className = m.user === document.title.split(" - ")[1] ? 'me' : 'other';
+                timestamp.innerText = m.timestamp; // Display the user and exact timestamp received
+
+
+                const username = document.createElement('span');
+                const color = users[m.user]?.color;
+                username.className = 'username';
+                username.style.color = color;
+                username.innerText = m.user;
+
+                if (m.user !== document.title.split(" - ")[1]) {
+                    //not: <span class="bubble-name" style="color: ${color}">${m.user}</span>
+                    //timestamp.innerHTML = `${m.user} • ${m.timestamp}`;
+
+                    bubbleWrapper.appendChild(username);
+                    
+                    //bubble.style.backgroundColor = color;
+                }
+
+
+                bubbleWrapper.appendChild(bubble);
+                bubble.appendChild(timestamp);
+
+                document.querySelector('.bubbles').appendChild(bubbleWrapper);
+            }
+            
+            const bubblesDiv = document.querySelector('.bubbles');
+            bubblesDiv.scrollTop = bubblesDiv.scrollHeight;
+
+            document.getElementById('text').focus();
+        });
+
+        socket.on('message', (msg) => {
+            const bubbleWrapper = document.createElement('div');
+            bubbleWrapper.className = 'bubble-wrapper';
+
+            const bubble = document.createElement('div');
+            bubble.className = msg.user === document.title.split(" - ")[1] ? 'bubble me' : 'bubble other';
+            bubble.innerText = msg.text;
+
+            const timestamp = document.createElement('span');
+            timestamp.className = msg.user === document.title.split(" - ")[1] ? 'me' : 'other';
+            timestamp.innerText = msg.timestamp;
+
+            const username = document.createElement('span');
+            const color = users[msg.user]?.color;
+            username.className = 'username';
+            username.style.color = color;
+            username.innerText = msg.user;
+
+            if (msg.user !== document.title.split(" - ")[1]) {
+                bubbleWrapper.appendChild(username);
+            }
+
+
+            const isMe = msg.user === document.title.split(" - ")[1];
+            bubbleWrapper.classList.add(isMe ? 'grow-right' : 'grow-left');
+
+            bubbleWrapper.appendChild(bubble);
+            bubble.appendChild(timestamp);
+
+            const popding = new Audio('/sounds/pop-ding.mp3');
+            popding.play();
+
+            document.querySelector('.bubbles').appendChild(bubbleWrapper);
+
+            // Scroll the bubbles div to the bottom
+            const bubblesDiv = document.querySelector('.bubbles');
+            bubblesDiv.scrollTop = bubblesDiv.scrollHeight;
+
+            if (Notification.permission === "granted" && document.hidden) {
+                new Notification("New message", { body: msg.text });
+            }
+        });
+
+        document.getElementById('text').addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        document.getElementById('code').addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                authenticate();
+            }
+        });
+
+        function sendMessage() {
+            const msg = document.getElementById('text').value;
+
+            if (!msg.trim()) {
+                return;
+            }
+
+            // Emit the message to the server
+            socket.emit('message', msg);
+
+            // Get the username from the title
+            const username = document.title.split(" - ")[1]; // Get the username
+
+            // Get the current timestamp for the message
+            const timestamp = new Date().toLocaleString('en-US', { weekday: 'long', hour: '2-digit', minute: '2-digit' }).replace(/(\w+)\s(\d)/, '$1, $2');;
+
+            // Create the message object with username and timestamp
+            const selfMsg = { user: username, timestamp: timestamp, text: msg };
+
+            // Display the message in the chat window
+            const bubbleWrapper = document.createElement('div');
+            bubbleWrapper.className = 'bubble-wrapper';
+
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble me';
+            bubble.innerText = selfMsg.text;
+
+            const timeSpan = document.createElement('span');
+            timeSpan.className = 'me';
+            timeSpan.innerText = selfMsg.timestamp;
+
+            const isMe = msg.user === document.title.split(" - ")[1];
+            bubbleWrapper.classList.add(isMe ? 'grow-left' : 'grow-right');
+
+            bubbleWrapper.appendChild(bubble);
+            bubble.appendChild(timeSpan);
+            
+            const swoosh = new Audio('https://cdn.glitch.global/cf4204de-cf5a-4f9d-916a-743f08bf5350/swoosh.mp3?v=1747263750055');
+            swoosh.play();
+
+            document.querySelector('.bubbles').appendChild(bubbleWrapper);
+
+            // Scroll the bubbles div to the bottom
+            const bubblesDiv = document.querySelector('.bubbles');
+            bubblesDiv.scrollTop = bubblesDiv.scrollHeight;
+
+            // Clear the input field
+            document.getElementById('text').value = '';
+        }
+    </script>
+
+<script>
+
+    const settingsButton = document.getElementById('settings-dropdown')
+    settingsButton.addEventListener('click', function() {
+        const settings = document.querySelector('.settings');
+        if (settings.style.display === 'none' || settings.style.display === '') {
+            settings.style.display = 'block';
+        } else {
+            settings.style.display = 'none';
+        }
+    });
+
+    // Show error message banner
+    function showErrorBanner(message) {
+        const banner = document.getElementById('error-banner');
+        const text = document.getElementById('error-text')
+        text.textContent = "⚠️ " + message;
+        banner.style.display = 'block';
+    }
+    
+    // Send error info to a server (optional)
+    function reportError(errDetails) {
+        console.warn("Reporting error to server:", errDetails);
+        // Example:
+        // fetch('/log-error', {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify(errDetails)
+        // });
+    }
+    
+    // Global runtime error handler
+    window.onerror = function(message, source, lineno, colno, error) {
+        const errDetails = {
+            type: 'runtime-error',
+            message,
+            source,
+            lineno,
+            colno,
+            error: error?.stack || String(error)
+        };
+        console.error("Global Error:", errDetails);
+        reportError(errDetails);
+        showErrorBanner("An unexpected error occurred.");
+        return false;
+    };
+    
+    // Global unhandled promise rejection handler
+    window.addEventListener("unhandledrejection", function(event) {
+        const errDetails = {
+            type: 'unhandled-rejection',
+            message: event.reason?.message || String(event.reason),
+            stack: event.reason?.stack || null
+        };
+        console.error("Unhandled Promise Rejection:", errDetails);
+        reportError(errDetails);
+        showErrorBanner("A background task failed.");
+    });
+
+    const errorBanner = document.getElementById("error-banner");
+
+    socket.on('disconnect', () => {
+        showErrorBanner("Connection lost to the server.");
+    });
+
+    socket.on('connect_error', (err) => {
+        showErrorBanner("Could not connect to server.");
+    });
+
+    socket.on("errorMessage", (msg) => {
+        showErrorBanner(msg || "A server error occurred.");
+    });
+    </script>
+</body>
