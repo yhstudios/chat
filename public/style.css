@@ -1,0 +1,558 @@
+body {
+    background-color: #292929;
+    color: white;
+    font-family: 'Trebuchet MS', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.blur {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(8px); /* or filter: blur(8px); if using duplicated content */
+    z-index: 3;
+    pointer-events: all; /* So it doesn’t block interaction */
+}
+
+.auth-container {
+    position: absolute;
+    z-index: 4;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -55%);
+    text-align: center;
+    justify-content: center;
+}
+
+.auth-container img {
+    width: 100px;
+    height: 100px;
+}
+
+.auth-container h1 {
+    font-size: 60px;
+    color: #3fb4f8;
+    text-align: center;
+    font-family: 'Trebuchet MS', Arial, sans-serif;
+}
+
+.auth-container h2 {
+    font-size: 20px;
+    color: white;
+    text-align: center;
+    font-family: 'Trebuchet MS', Arial, sans-serif;
+}
+
+.auth-container input {
+    width: 300px;
+    height: 40px;
+    margin: 10px 0;
+    padding: 5px;
+    border-radius: 10px;
+    border-color: #3fb4f8;
+    border-width: 3px;
+    background-color: white;
+    color: black;
+    font-size: 40px;
+    text-align: center;
+}
+
+.auth-button {
+    width: 80px;
+    height: 40px;
+    margin: 0 auto;
+    margin-top: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+    background-color: #3fb4f8;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    display: block;
+
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 70px;
+    background-color: #292929;
+    z-index: 2;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.header h1 {
+    color: white;
+    position: absolute;
+    top: -5px;
+    left: 80px;
+}
+
+.header-profile {
+    font-family: 'Material Icons';
+    font-size: 37px;
+    vertical-align: middle; 
+    margin: 0px;
+    float: right;
+    border: #3fb4f8 solid 3px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.header p {
+    font-size: 35px;
+    color: #3fb4f8;
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.settings-dropdown {
+    display: inline-block;
+    color: white;
+    padding: 10px;
+    margin-right: 10px;
+    font-size: 30px;
+    font-family: 'Material Icons';
+    cursor: pointer;
+}
+
+.settings {
+    border-radius: 10px;
+    border-top-right-radius: 0;
+    height: 300px;
+    width: 200px;
+    float: right;
+    position: absolute;
+    top: 75px;
+    right: 20px;
+    margin: 10px;
+    background-color: #292929;
+    display: none;
+    border: 3px solid #3fb4f8;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.settings p {
+    margin-left: 10px;
+}
+
+.logo {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 50px;
+    height: auto;
+    margin: 10px;
+}
+
+.messages {
+    position: absolute;
+    top: 70px; /* Matches the height of the header */
+    width: 30%;
+    height: calc(100% - 70px); /* Adjust height to account for the header */
+    z-index: 1;
+    background-color: #1b1b1b;
+    color: white;
+    padding: 10px;
+}
+
+.messages-icon {
+    font-family: 'Material Icons';
+    font-size: 50px;
+    vertical-align: middle; /* Aligns the icon vertically with the text */
+    margin-left: 10px;
+    margin-right: 5px;
+    color: #3fb4f8; /* Icon color */
+}
+
+.messages h1 {
+    font-size: 50px;
+    margin: 0; /* Removes extra margin */
+    font-family: 'Arial', sans-serif;
+    display: inline-block; /* Ensures it stays inline with the icon */
+    vertical-align: middle; /* Aligns the text vertically with the icon */
+}
+
+.message-item {
+    background-color: #292929;
+    color: white;
+    padding: 10px;
+    margin: 5px;
+    margin-left: 40px;
+    margin-right: 40px;
+    border-radius: 10px;
+    font-size: 20px;
+    font-family: 'Arial', sans-serif;
+    transition: transform 0.2s ease-in-out;
+}
+
+.message-item:hover {
+    transform: scale(1.03);
+    transition: transform 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.message-sender {
+    font-size: 25px;
+    font-weight: bold;
+    color: #3fb4f8
+}
+
+.message-time {
+    font-size: 15px;
+    color: #a0a0a0;
+}
+
+.message-preview {
+    font-size: 20px;
+    color: #a0a0a0;
+    margin-top: 7px;
+}
+
+.texts {
+    position: absolute;
+    top: 70px; /* Matches the height of the header */
+    left: 30%;
+    width: 40%;
+    height: calc(100% - 70px); /* Adjust height to account for the header */
+    z-index: 1;
+    background-color: #131314;
+}
+
+.send-menu {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 65px;
+}
+
+.send-box {
+    display: inline-flex;
+    height: 36px;
+    width: calc(100% - 90px);
+    margin: 5px;
+    margin-left: 7px;
+    margin-top: 7px;
+    padding: 5px;
+    border-radius: 10px;
+    border-color: #3fb4f8;
+    font-size: 20px;
+    vertical-align: middle;
+    outline: none;
+}
+
+.send-button {
+    display: inline-flex;
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-size: 30px;
+    width: 30px;
+    height: 30px;
+    margin: 5px;
+    margin-left: 0;
+    margin-top: 7px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #3fb4f8;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.contact-header {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 55px;
+    background-color: #004c83;
+}
+
+.contact-name {
+    font-size: 30px;
+    color: white;
+    margin: 10px;
+    font-family: 'Arial', sans-serif;
+    vertical-align: middle;
+    display: inline-block;
+    margin-left: 2px;
+}
+
+.contact-icon {
+    font-family: 'Material Icons';
+    font-size: 40px;
+    vertical-align: middle; /* Aligns the icon vertically with the text */
+    margin-left: 10px;
+    margin-right: 5px;
+    vertical-align: middle;
+    background-color: white;
+    border-radius: 50%;
+    color: #3fb4f8; /* Icon color */ 
+}
+
+.bubbles {
+    flex: 1;
+    display: flex;
+    overflow-y: auto;
+    padding: 15px;
+    gap: 8px;
+    flex-direction: column;
+    font-family: 'Arial', sans-serif;
+    margin-top: 55px;
+    max-height: calc(100% - 150px); /* Ensures it doesn't exceed the height above .send-menu */
+
+}
+
+@keyframes growInLeft {
+    from {
+        transform: scale(0);
+        transform-origin: bottom left;
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        transform-origin: bottom left;
+        opacity: 1;
+    }
+    }
+
+@keyframes growInRight {
+    from {
+        transform: scale(0);
+        transform-origin: bottom right;
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        transform-origin: bottom right;
+        opacity: 1;
+    }
+}
+
+    /* Apply animation based on direction */
+.bubble-wrapper.grow-left {
+    animation: growInLeft 0.25s ease-out;
+}
+
+.bubble-wrapper.grow-right {
+    animation: growInRight 0.25s ease-out;
+}
+  
+
+.bubble-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.bubble {
+    max-width: 55%;
+    padding: 10px 15px;
+    border-radius: 20px;
+    position: relative;
+    display: inline-block;
+    font-size: 20px;
+}
+
+.bubble.other {
+    background-color: #3fb4f8;
+    align-self: flex-start;
+    border-bottom-left-radius: 1px;
+}
+
+.bubble.me {
+    background-color: #E5E5EA;
+    color: black;
+    align-self: flex-end;
+    border-bottom-right-radius: 1px;
+    margin-top: 15px;
+}
+
+.bubble-wrapper span {
+    text-align: right;
+    font-size: 14px;
+    color: #333333;
+    margin-top: 5px;
+    display: flex;
+}
+
+.bubble-wrapper span.me {
+    display: block;
+    margin-bottom: 2px;
+}
+
+.bubble-wrapper span.sender {
+    margin-bottom: 5px;
+    margin-left: 2px;
+    align-self: flex-start;
+}
+
+.username {
+    font-size: 20px;
+    color: white;
+    margin-left: 15px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.contact-info {
+    background-color: #1b1b1b;
+    width: 28.8%;
+    height: calc(100% - 70px); /* Adjust height to account for the header */
+    position: absolute;
+    top: 70px; /* Matches the height of the header */
+    left: 70%;
+    z-index: 1;
+    color: white;
+    padding: 10px;
+}
+
+.contact-info h1 {
+    font-size: 50px;
+    margin: 0; /* Removes extra margin */
+    font-family: 'Arial', sans-serif;
+    display: inline-block; /* Ensures it stays inline with the icon */
+    vertical-align: middle; /* Aligns the text vertically with the icon */
+}
+
+.contact-logo {
+    font-family: 'Material Icons';
+    font-size: 50px;
+    vertical-align: middle; /* Aligns the icon vertically with the text */
+    color: #3fb4f8;
+    margin-left: 10px;
+}
+
+.contact-info h2 {
+    font-size: 40px;
+    color: #3fb4f8;
+    text-align: center;
+    font-family: 'Trebuchet MS', Arial, sans-serif;
+}
+
+.contact-info p {
+    font-size: 20px;
+    color: #3fb4f8;
+    text-align: center;
+    font-family: 'Trebuchet MS', Arial, sans-serif;
+}
+
+a {
+    text-decoration: none;
+    color: #3fb4f8;
+}
+
+.contact-info h3 {
+    font-size: 20px;
+    color: white;
+    text-align: center;
+    font-family: 'Trebuchet MS', Arial, sans-serif;
+}
+
+.yh-logo {
+    position: absolute; /* Changed to fixed to ensure it stays visible relative to the viewport */
+    top: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 70px;
+    width: auto;
+    z-index: 3; /* Added z-index to ensure it appears above other elements */
+}
+
+#error-banner {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ff4f4f;
+    color: white;
+    padding: 10px 20px;
+    z-index: 9999;
+    border-radius: 0 0 10px 10px;
+    font-family: sans-serif;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+#error-text {
+    margin: 0;
+    padding: 10px;
+    text-align: center;
+}
+
+#error-banner span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid #3fb4f8;
+    color: #3fb4f8;
+    margin: 5px;
+    cursor: pointer;
+}
+
+#error-banner .span-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+@media screen and (max-width: 1140px) {
+    .contact-info {
+        display: none;
+    }   
+    .messages {
+        display: none;
+    }
+    .texts {
+        width: 100%;
+        left: 0;
+    }
+    body {
+        zoom: 2;
+    }
+
+    .header h1 {
+        font-size: 24px;
+        top: 5px;
+        left: 65px
+    }
+
+    .logo {
+        width: 40px;
+        top: 5px;
+    }
+
+    .header-profile {
+        font-size: 30px;
+    }
+
+    .header p {
+        font-size: 25px;
+        margin-right: 0;
+    }
+
+    .settings-dropdown {
+        font-size: 24px;
+    }
+
+    .yh-logo {
+        height: 95px;
+        clip-path: inset(0px 0px 30px 0px);
+    }
+}
+
+

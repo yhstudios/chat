@@ -1,0 +1,19 @@
+{
+    "name": "Chat App",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#3fb4f8",
+    "theme_color": "#0d4881",
+    "icons": [
+        {
+            "src":"https://cdn.glitch.global/cf4204de-cf5a-4f9d-916a-743f08bf5350/icons%2Fandroid-chrome-192x192.png?v=1747100348725",
+            "sizes":"192x192",
+            "type":"image/png"
+        },
+        {
+            "src":"https://cdn.glitch.global/cf4204de-cf5a-4f9d-916a-743f08bf5350/icons%2Fandroid-chrome-512x512.png?v=1747100349001",
+            "sizes":"512x512",
+            "type":"image/png"
+        }
+    ]
+  }
