@@ -9,9 +9,10 @@ const io = socketIo(server);
 
 // User codes (these should be unique for each user)
 let users = {
-    'Yehuda': '1234',  // user1's code
-    'Daniel': '5678',   // user2's code
-    'Unknown': 'moshe'
+    'Yehuda': { code: 'jaxson' },
+    'Daniel': { code: '5678' }, 
+    'Yosef': { code: 'r0B10x' },
+    'Levy': { code: '3764' },
 };
 
 let connectedUsers = {};
@@ -25,6 +26,7 @@ try {
     messages = [];
 }
 
+
 // Save messages to file
 function saveMessages() {
     fs.writeFileSync('messages.json', JSON.stringify(messages, null, 2));
@@ -33,42 +35,32 @@ function saveMessages() {
 app.use(express.static('public'));
 
 io.on('connection', (socket) => {
-    console.log('A user connected.');
 
     // Authentication
     socket.on('authenticate', (code) => {
-        const user = Object.keys(users).find(user => users[user] === code);
+        const user = Object.keys(users).find(user => users[user].code === code);
         
         if (!user) {
             socket.emit('authError', 'Invalid code.');
-            socket.disconnect();
             return;
+        }
+
+        if (messages.length === 0) {
+            socket.emit('errorMessage', 'Failed to load chat history. Please try again later.');
         }
 
         connectedUsers[socket.id] = user;
         socket.emit('authSuccess', user);
-
+        
         // Send chat history to the new user
         socket.emit('chatHistory', messages);
 
         // Listen for incoming messages from this user
         socket.on('message', (msg) => {
-            const fullMsg = { user, time: Date.now(), text: msg };
+            const fullMsg = { user, timestamp: new Date().toLocaleString('en-US', { weekday: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' }).replace(/(\w+)\s(\d)/, '$1, $2'), text: msg };
             messages.push(fullMsg);
             saveMessages();
-/*
-            if (Notification.permission === "granted") {
-                new Notification("Hello!", { body: "This is a test notification." });
-            } else if (Notification.permission !== "denied") {
-                Notification.requestPermission().then(permission => {
-                    if (permission === "granted") {
-                        new Notification("Hello!", { body: "Thanks for allowing notifications!" });
-                    } else {
-                        alert("Notification permission denied.");
-                    }
-                });
-            }
-    */
+
             // Broadcast the message to other users (excluding the sender)
             for (let [id] of Object.entries(connectedUsers)) {
                 if (id !== socket.id) {
@@ -81,13 +73,27 @@ io.on('connection', (socket) => {
         // Handle user disconnect
         socket.on('disconnect', () => {
             delete connectedUsers[socket.id];
-            console.log(`${user} disconnected.`);
         });
     });
+});
+
+
+app.get('/debug/messages', (req, res) => {
+    res.json(messages);
 });
 
 // Use Glitch's or other host's dynamic port
 const port = process.env.PORT || 3000;
 server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
+});
+
+process.on('uncaughtException', (err) => {
+    console.error('❌ Uncaught Exception:', err.stack || err);
+    io.emit('errorMessage', 'A server error occurred. Please try again later.');
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('❌ Unhandled Rejection:', reason);
+    io.emit('errorMessage', 'A server error occurred. Please try again later.');
 });
